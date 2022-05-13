@@ -17,10 +17,19 @@ from azure.cognitiveservices.vision.face import FaceClient
 from msrest.authentication import CognitiveServicesCredentials
 from azure.cognitiveservices.vision.face.models import TrainingStatusType, Person, QualityForRecognition
 
+# Abstracting my KEY and ENDPOINT away from this file :D
+# They are stored in a .gitignore file with the information on seperate lines
+APIstuff = 'API.txt'
+def setup_API(filepath):
+    f = open(filepath, "r")
+    read = f.read().splitlines()
+    return read
+
+credz = setup_API(APIstuff)
 # This key will serve all examples in this document.
-KEY = "bc8561e0a6cb4ff9b0d7015c45f91ee7"
+KEY = credz[0]
 # This endpoint will be used in all examples in this quickstart.
-ENDPOINT = "https://ia-compsci-23.cognitiveservices.azure.com/"
+ENDPOINT = credz[1]
 
 # Create an authenticated FaceClient.
 face_client = FaceClient(ENDPOINT, CognitiveServicesCredentials(KEY))
@@ -61,18 +70,21 @@ def Detection(img_url):
 
     img.show()
 
+""" Based on Example #4"""
 def Comparison():
 
+    compared_to = 'test_images/Group#2.jpeg'
     response_detected_faces = face_client.face.detect_with_stream(
-        image=open('test_images/Group#1.jpeg','rb'),
+        image=open(compared_to,'rb'),
         detection_model='detection_03',
-        recognition_model='recognition_04',
-        return_face_landmarks=True
+        recognition_model='recognition_04'
     )
 
-# faces to check against
+    # faces to check against
     face_ids = [ face.face_id for face in response_detected_faces]
-    
+        
+    # This would be the image of the student we want to find
+    # a clean image with just them is what we need to be inputed
     img_target = open('test_images/Noah#1.jpeg', 'rb')
     response_face_target = face_client.face.detect_with_stream(
         image = img_target,
@@ -81,17 +93,34 @@ def Comparison():
     )
     target_face_id = response_face_target[0].face_id
 
+    # Now we have both our target face id,
+    # And we compare it against all the face ids from face_ids
     matched_face_ids = face_client.face.find_similar(
         face_id=target_face_id,
         face_ids=face_ids
     )
 
-    print(matched_face_ids)
+    # Open the group image / one you want to check if the student is in
+    img = Image.open(open(compared_to, 'rb'))
+    draw = ImageDraw.Draw(img)
+
+    # draw a box around all matches of the face
+    for matched_face in matched_face_ids:
+        for face in response_detected_faces:
+            if face.face_id == matched_face.face_id:
+                rect = face.face_rectangle
+                left = rect.left
+                top = rect.top
+                right = rect.width + left
+                bottom = rect.height + top
+                draw.rectangle(((left, top), (right, bottom)), outline='green', width=5)
+    img.show()
 
 
 
 def main():
     Comparison() 
+    print('main')
 
 if __name__ == "__main__":
     main()
