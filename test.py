@@ -5,6 +5,7 @@ import glob
 import os
 import sys
 import time
+from turtle import color
 from urllib import response
 import uuid
 import requests
@@ -73,7 +74,7 @@ def Detection(img_url):
 """ Based on Example #4"""
 def Comparison():
 
-    compared_to = 'test_images/Group#2.jpeg'
+    compared_to = 'test_images/Charles+Anastasia.jpeg'
     response_detected_faces = face_client.face.detect_with_stream(
         image=open(compared_to,'rb'),
         detection_model='detection_03',
@@ -104,6 +105,9 @@ def Comparison():
     img = Image.open(open(compared_to, 'rb'))
     draw = ImageDraw.Draw(img)
 
+    #Flag raising for if we find a match
+    matched = False
+
     # draw a box around all matches of the face
     for matched_face in matched_face_ids:
         for face in response_detected_faces:
@@ -114,6 +118,11 @@ def Comparison():
                 right = rect.width + left
                 bottom = rect.height + top
                 draw.rectangle(((left, top), (right, bottom)), outline='green', width=5)
+                matched = True
+    
+    if matched == False:
+        draw.line([(0,0),(img.size[0],img.size[1])],fill='red', width=5)
+
     img.show()
 
 
