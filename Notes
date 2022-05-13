@@ -1,0 +1,16 @@
+|== DOCUMENTATION ==|
+Face detection is required as a first step in all the other scenarios. The Detect API detects human faces in an image and returns the rectangle coordinates of their locations
+
+IDENTIFICATION - "one-to-many" matching of one face in an image to a set of faces.
+After you create and train a group, you can do identification against the group with a new detected face. If the face is identified as a person in the group, the person object is returned.
+
+VERIFICATION - "Do these two faces belong to the same person?".
+Verification is also a "one-to-one" matching of a face in an image to a single face, photo to verify that they're the same individual.
+
+!!! PRICING - 20 transactions per minute, 30,000 transactions free per month !!!
+
+
+|== NOTES ==|
+In order to reduce the computation time - first go through pictures and find faces in them, crop everything out
+
+IDENTIFICATION - wouldn't work because it would require large already known data to compare against, unless it can work with people only having 1 image in it. Can have a personGroup called 'students'
