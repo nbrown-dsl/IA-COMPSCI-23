@@ -38,6 +38,7 @@ face_client = FaceClient(ENDPOINT, CognitiveServicesCredentials(KEY))
 # PUT IN ANY IMAGE YOU WANT!!!!! IT WORKS
 image_url = 'https://www.business2community.com/wp-content/uploads/2015/10/42454567_m.jpg.jpg'
 
+# Based on EXAMPLE #1
 def Detection(img_url):
     image_name = os.path.basename(img_url)
 
@@ -71,10 +72,16 @@ def Detection(img_url):
 
     img.show()
 
-""" Based on Example #4"""
-def Comparison():
+# Who do we want to find
+target_person = 'test_images/Noah#1.jpeg'
+# What images do we want to check
+imgs_to_check = ['test_images/Group#2.jpeg', 'test_images/Charles+Anastasia.jpeg', 'test_images/Group#1.jpeg']
 
-    compared_to = 'test_images/Charles+Anastasia.jpeg'
+# Based on EXAMPLE #4
+def Comparison(target_img, compare_img):
+
+    # This is the image that we want to check
+    compared_to = compare_img
     response_detected_faces = face_client.face.detect_with_stream(
         image=open(compared_to,'rb'),
         detection_model='detection_03',
@@ -86,7 +93,7 @@ def Comparison():
         
     # This would be the image of the student we want to find
     # a clean image with just them is what we need to be inputed
-    img_target = open('test_images/Noah#1.jpeg', 'rb')
+    img_target = open(target_img, 'rb')
     response_face_target = face_client.face.detect_with_stream(
         image = img_target,
         detection_model='detection_03',
@@ -125,11 +132,11 @@ def Comparison():
 
     img.show()
 
-
-
+# WHERE TO RUN ANY METHODS YOU MAKE :DDD What's in here is what runs
 def main():
-    Comparison() 
-    print('main')
+    for img in imgs_to_check:
+        Comparison(target_person, img) 
+    print('MAIN COMPLETE :D')
 
 if __name__ == "__main__":
     main()
