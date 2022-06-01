@@ -14,3 +14,7 @@ Verification is also a "one-to-one" matching of a face in an image to a single f
 In order to reduce the computation time - first go through pictures and find faces in them, crop everything out
 
 IDENTIFICATION - wouldn't work because it would require large already known data to compare against, unless it can work with people only having 1 image in it. Can have a personGroup called 'students'
+
+Got rid of DRIVE functionaloty because school email wouldn't allow me to set up an API
+Instead gonna use a ZIP file system for searching through all the compare pictures
+and also a single image file for the target face

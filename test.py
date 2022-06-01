@@ -17,6 +17,11 @@ from PIL import Image, ImageDraw
 from azure.cognitiveservices.vision.face import FaceClient
 from msrest.authentication import CognitiveServicesCredentials
 from azure.cognitiveservices.vision.face.models import TrainingStatusType, Person, QualityForRecognition
+# ZIP file management
+from zipfile import ZipFile
+
+# IMAGE FILE EXTENSIONS
+img_extensions = ['.jpg','.jpeg','.png','.heif']
 
 # Abstracting my KEY and ENDPOINT away from this file :D
 # They are stored in a .gitignore file with the information on seperate lines
@@ -72,10 +77,31 @@ def Detection(img_url):
 
     img.show()
 
+def RetriveImages():
+    print('got da images')
+
 # Who do we want to find
 target_person = 'test_images/Noah#1.jpeg'
 # What images do we want to check
 imgs_to_check = ['test_images/Group#2.jpeg', 'test_images/Charles+Anastasia.jpeg', 'test_images/Group#1.jpeg']
+
+def extract_Compare(zip_address):
+    file_name, file_extension = os.path.splitext(zip_address)
+    if(file_extension == '.zip'):
+        # VALID ZIP FILE
+        with ZipFile(zip_address, 'r') as file:
+            # printing all the contents of the zip file
+            # file.printdir()
+            zip_files = file.namelist() # list of all the file names :D
+            imgs = [] #empty list to store VALID files we want to extract
+            for file in zip_files:
+                file_name, file_extension = os.path.splitext(file)
+                if(file_extension in img_extensions):
+                    imgs.append(file)
+            print(imgs)
+    else:
+        print("That Ain't a ZIP buddy")
+
 
 # Based on EXAMPLE #4
 def Comparison(target_img, compare_img):
@@ -134,8 +160,11 @@ def Comparison(target_img, compare_img):
 
 # WHERE TO RUN ANY METHODS YOU MAKE :DDD What's in here is what runs
 def main():
-    for img in imgs_to_check:
-        Comparison(target_person, img) 
+    
+    #for img in imgs_to_check:
+       # Comparison(target_person, img) 
+    extract_Compare('test_images/Group.zip')
+    extract_Compare('test_images/Wrong.zip')
     print('MAIN COMPLETE :D')
 
 if __name__ == "__main__":
