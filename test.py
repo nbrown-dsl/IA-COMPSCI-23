@@ -83,25 +83,39 @@ def RetriveImages():
 # Who do we want to find
 target_person = 'test_images/Noah#1.jpeg'
 # What images do we want to check
-imgs_to_check = ['test_images/Group#2.jpeg', 'test_images/Charles+Anastasia.jpeg', 'test_images/Group#1.jpeg']
+imgs_to_check = []
 
+# Taking out all of the image files
 def extract_Compare(zip_address):
     file_name, file_extension = os.path.splitext(zip_address)
     if(file_extension == '.zip'):
         # VALID ZIP FILE
-        with ZipFile(zip_address, 'r') as file:
+        with ZipFile(zip_address, 'r') as zip:
             # printing all the contents of the zip file
             # file.printdir()
-            zip_files = file.namelist() # list of all the file names :D
+            zip_files = zip.namelist() # list of all the file names :D
             imgs = [] #empty list to store VALID files we want to extract
             for file in zip_files:
                 file_name, file_extension = os.path.splitext(file)
                 if(file_extension in img_extensions):
                     imgs.append(file)
+                    zip.extract(file,path='store') # We store all the images in a temporary space called store
             print(imgs)
+            
     else:
         print("That Ain't a ZIP buddy")
 
+# File management at it's finest
+def clear_dir(dir_path):
+    files = os.listdir(dir_path)
+    for file in files:
+        try:
+            # remove the files
+            os.remove(dir_path+'/'+file)
+        except:
+            # here it isn't a file so it can only be a dir
+            os.rmdir(dir_path+'/'+file)
+    print(dir_path + 'was cleared')
 
 # Based on EXAMPLE #4
 def Comparison(target_img, compare_img):
@@ -160,11 +174,17 @@ def Comparison(target_img, compare_img):
 
 # WHERE TO RUN ANY METHODS YOU MAKE :DDD What's in here is what runs
 def main():
-    
-    #for img in imgs_to_check:
-       # Comparison(target_person, img) 
+    # Getting all files
     extract_Compare('test_images/Group.zip')
     extract_Compare('test_images/Wrong.zip')
+    #now they are in store
+
+    # TO DO: Get them out of store and run 
+
+    # for img in imgs_to_check:
+    #   Comparison(target_person, img)
+   
+    clear_dir('store')
     print('MAIN COMPLETE :D')
 
 if __name__ == "__main__":
