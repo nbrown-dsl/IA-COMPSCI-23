@@ -44,7 +44,7 @@ face_client = FaceClient(ENDPOINT, CognitiveServicesCredentials(KEY))
 image_url = 'https://www.business2community.com/wp-content/uploads/2015/10/42454567_m.jpg.jpg'
 
 # Based on EXAMPLE #1
-def Detection(img_url):
+def detection(img_url):
     image_name = os.path.basename(img_url)
 
     response_detected_faces = face_client.face.detect_with_url(
@@ -77,8 +77,13 @@ def Detection(img_url):
 
     img.show()
 
-def RetriveImages():
-    print('got da images')
+def retrive_images(dir):
+    for path in os.listdir(dir):
+        proper_path = dir + '/' + path
+        imgs_to_check.append(proper_path)
+    print(imgs_to_check)
+    print('got da images :D')
+
 
 # Who do we want to find
 target_person = 'test_images/Noah#1.jpeg'
@@ -86,7 +91,7 @@ target_person = 'test_images/Noah#1.jpeg'
 imgs_to_check = []
 
 # Taking out all of the image files
-def extract_Compare(zip_address):
+def extract_compare(zip_address):
     file_name, file_extension = os.path.splitext(zip_address)
     if(file_extension == '.zip'):
         # VALID ZIP FILE
@@ -100,7 +105,6 @@ def extract_Compare(zip_address):
                 if(file_extension in img_extensions):
                     imgs.append(file)
                     zip.extract(file,path='store') # We store all the images in a temporary space called store
-            print(imgs)
             
     else:
         print("That Ain't a ZIP buddy")
@@ -115,10 +119,10 @@ def clear_dir(dir_path):
         except:
             # here it isn't a file so it can only be a dir
             os.rmdir(dir_path+'/'+file)
-    print(dir_path + 'was cleared')
+    print(dir_path + ' was cleared')
 
 # Based on EXAMPLE #4
-def Comparison(target_img, compare_img):
+def comparison(target_img, compare_img):
 
     # This is the image that we want to check
     compared_to = compare_img
@@ -175,14 +179,14 @@ def Comparison(target_img, compare_img):
 # WHERE TO RUN ANY METHODS YOU MAKE :DDD What's in here is what runs
 def main():
     # Getting all files
-    extract_Compare('test_images/Group.zip')
-    extract_Compare('test_images/Wrong.zip')
+    extract_compare('test_images/Group.zip')
     #now they are in store
 
     # TO DO: Get them out of store and run 
-
-    # for img in imgs_to_check:
-    #   Comparison(target_person, img)
+    retrive_images('store')
+    for img in imgs_to_check:
+        print(img)
+        comparison(target_person, img)
    
     clear_dir('store')
     print('MAIN COMPLETE :D')
